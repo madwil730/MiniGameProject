@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class UIController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private GameObject mainUI;
+	[SerializeField]
+	private GameObject selectCharacterUI;
+	[SerializeField]
+	private GameObject stageUI;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	[SerializeField]
+	private SceneController sceneController;
+
+	public void SelectCharacterOn()
+	{
+		selectCharacterUI.SetActive(true);	
+		mainUI.SetActive(false);
+	}
+
+	public void StageOn()
+	{
+		selectCharacterUI.SetActive(false);
+		stageUI.SetActive(true);
+		sceneController.Initialization(0);
+	}
 }

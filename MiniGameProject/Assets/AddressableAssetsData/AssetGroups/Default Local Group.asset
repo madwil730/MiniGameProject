@@ -17,11 +17,10 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 355338fae0c9f4e46aa95768d88cd738
   m_SerializeEntries:
-  - m_GUID: 474cc33271d5ccf488b7839d38d8bfd2
-    m_Address: Square
+  - m_GUID: 065c85de5b4b6984f9abbe445ab572c4
+    m_Address: Assets/Prefab/Static Sprite.prefab
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - default
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 2215167aeac533c47ab5ca419f86f162, type: 2}
   m_SchemaSet:

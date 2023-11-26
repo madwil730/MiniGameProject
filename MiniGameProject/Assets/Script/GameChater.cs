@@ -1,45 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using DG.Tweening;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using Unity.VisualScripting;
 
-public class GameChater : MonoBehaviour
+public class GameChater : MonoBehaviour, ChaterBase
 {
-    [SerializeField]
-    private AssetReferenceGameObject addressObject;
-	[SerializeField]
-	private GameObject ob;
 
-	private void OnDestroy()
+	void Update()
 	{
-		addressObject.ReleaseAsset();
-	}
-
-	private void Awake()
-	{
-		addressObject.LoadAssetAsync();
-	}
-
-	void Start()
-    {
-
-        //Instantiate(addressObject.Asset);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.A))
-			 Instantiate(addressObject.Asset);
-
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			Debug.Log(222);
-			ob.transform.DOMoveY(10, 3);
+			Jump();
 		}
+	}
 
+	public void Jump()
+	{
+		this.transform.DOMoveY(this.transform.position.y + 3, 1);
+		this.GetComponent<Rigidbody2D>().gravityScale = 0;
+	}
+
+	public void Special()
+	{
+		throw new System.NotImplementedException();
 	}
 }
