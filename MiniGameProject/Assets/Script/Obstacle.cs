@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class Obstacle : MonoBehaviour
+public class Obstacle : MonoBehaviour  // 나중에 rect transform 으로 시간되면 바꾸기 
 {
 
 	[SerializeField]
 	private float endPoint;
 	[SerializeField]
 	private float duration;
+	[SerializeField]
+	private Vector3 spawnPosition;
+	[SerializeField]
+	private GameObject scoreBox;
 
-	private void OnEnable()
-	{
-		Move();
-		
-	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
@@ -24,6 +23,11 @@ public class Obstacle : MonoBehaviour
 
 	public void Move()
 	{
-		this.transform.DOMoveX(endPoint, duration);
+		transform.localScale = new Vector3(1, Random.Range(4,7), 1);
+	
+		transform.DOMoveX(endPoint, duration).OnComplete(() =>
+		{
+			transform.localPosition = spawnPosition;
+		});
 	}
 }
