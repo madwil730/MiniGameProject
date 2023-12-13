@@ -1,8 +1,9 @@
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.EventSystems;
 
-public class GameChater : MonoBehaviour, ChaterBase
+public class GameChater : MonoBehaviour, ChaterBase,IPointerDownHandler
 {
 
 	void Update()
@@ -19,8 +20,15 @@ public class GameChater : MonoBehaviour, ChaterBase
 		this.GetComponent<Rigidbody2D>().gravityScale = 0;
 	}
 
+
 	public void Special()
 	{
-		throw new System.NotImplementedException();
+		Debug.Log("this is Special");
+	}
+
+	public void OnPointerDown(PointerEventData eventData)
+	{
+		this.transform.DOMoveY(this.transform.position.y + 3, 1);
+		this.GetComponent<Rigidbody2D>().gravityScale = 0;
 	}
 }
