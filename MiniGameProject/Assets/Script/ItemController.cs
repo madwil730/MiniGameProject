@@ -19,8 +19,6 @@ public class ItemController : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		Debug.Log(444);
-		Debug.Log(444);
 		ItemAction.Invoke();
 		this.transform.localPosition = new Vector3(100, 100, 0);
 		//Destroy(this);

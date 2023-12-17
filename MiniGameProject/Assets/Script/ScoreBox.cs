@@ -12,6 +12,7 @@ public class ScoreBox : MonoBehaviour
 	
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
+		if (!SceneController.PlayerDeath)
 		sceneController.IncreaseScore(1);
 	}
 

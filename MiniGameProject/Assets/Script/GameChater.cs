@@ -1,34 +1,34 @@
 using DG.Tweening;
+using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
+using UnityEngine.TextCore.Text;
 
-public class GameChater : MonoBehaviour, ChaterBase,IPointerDownHandler
+public class GameChater : MonoBehaviour, ChaterBase
 {
 
-	void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			Jump();
-		}
-	}
-
-	public void Jump()
-	{
-		this.transform.DOMoveY(this.transform.position.y + 3, 1);
-		this.GetComponent<Rigidbody2D>().gravityScale = 0;
-	}
-
+	public Action OnDeathUIAction;
 
 	public void Special()
 	{
 		Debug.Log("this is Special");
 	}
 
-	public void OnPointerDown(PointerEventData eventData)
+
+
+	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		this.transform.DOMoveY(this.transform.position.y + 3, 1);
-		this.GetComponent<Rigidbody2D>().gravityScale = 0;
+
+		if (collision.gameObject.tag == "Obstacle")
+		{
+			OnDeathUIAction.Invoke();
+			GetComponent<Rigidbody2D>().gravityScale = 100;
+		}
+	}
+
+	public void Jump()
+	{
+		throw new System.NotImplementedException();
 	}
 }

@@ -16,6 +16,8 @@ public class SceneController : MonoBehaviour
 	[SerializeField]
 	private GameObject[] ItemList;
 	[SerializeField]
+	private GameObject DeathUI;
+	[SerializeField]
 	private Transform Land;
 
 	[SerializeField]
@@ -29,11 +31,10 @@ public class SceneController : MonoBehaviour
 	[SerializeField]
 	private float obstacleTime = 3;
 
-
 	private int addressIndex;
 	private int obstacleIndex = 0;
 	private bool backGroundChange;
-	private bool PlayerDeath;
+	public static bool PlayerDeath;
 	bool GameStart;
 
 	public TextMeshProUGUI Score;
@@ -59,8 +60,9 @@ public class SceneController : MonoBehaviour
 	{
 		yield return new WaitForSeconds(0.2f);  // 수정 나중에  until 같은 코드로 고치기
 
-		var ob = Instantiate(addressObject[addressIndex].Asset) as GameObject;
-		characterTouchEvent.Initialization(ob);
+		var character = Instantiate(addressObject[addressIndex].Asset) as GameObject;
+		character.GetComponent<GameChater>().OnDeathUIAction = OnDeathUI;
+		characterTouchEvent.Initialization(character);
 		StartCoroutine(CoOnObstacle());
 	}
 
@@ -74,8 +76,8 @@ public class SceneController : MonoBehaviour
 			if (obstacleIndex == obstacle.Length)
 				obstacleIndex = 0;
 
-			//var randomItem = Random.Range(0, 3);
-			var randomItem = 1;
+			var randomItem = Random.Range(0, 3);
+			//var randomItem = 1;
 
 			if (randomItem == 1)
 			{
@@ -93,6 +95,11 @@ public class SceneController : MonoBehaviour
 	{
 		ScoreIndex += num;
 		Score.text = $"Score  : {ScoreIndex} ";
+	}
+
+	public void OnDeathUI()
+	{
+		DeathUI.SetActive(true);
 	}
 
 	private void Update()

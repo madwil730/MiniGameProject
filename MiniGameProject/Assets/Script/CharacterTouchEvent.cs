@@ -7,7 +7,6 @@ using UnityEngine.EventSystems;
 public class CharacterTouchEvent : MonoBehaviour, IPointerDownHandler
 {
 	private GameObject character;
-	public bool Death;
 	public void Initialization(GameObject ob)
 	{
 		character = ob;	
@@ -16,7 +15,7 @@ public class CharacterTouchEvent : MonoBehaviour, IPointerDownHandler
 
 	public void OnPointerDown(PointerEventData eventData)
 	{
-		if(Death)
+		if (!SceneController.PlayerDeath)
 		{
 			character.transform.DOMoveY(character.transform.position.y + 3, 1);
 			character.GetComponent<Rigidbody2D>().gravityScale = 0;

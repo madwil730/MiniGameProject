@@ -16,13 +16,6 @@ public class Obstacle : MonoBehaviour  // 나중에 rect transform 으로 시간되면 바
 	[SerializeField]
 	private GameObject scoreBox;
 
-	public Action<bool> PlayerDeath;
-
-	private void OnTriggerEnter2D(Collider2D collision)
-	{
-		Debug.Log("Player Death!");
-		PlayerDeath.Invoke(true);
-	}
 
 	public void Move(GameObject item)
 	{
