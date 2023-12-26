@@ -18,7 +18,11 @@ public class SceneController : MonoBehaviour
 	[SerializeField]
 	private GameObject DeathUI;
 	[SerializeField]
+	private GameObject PauseUI;
+	[SerializeField]
 	private Transform Land;
+	[SerializeField]
+	private GameObject BlockImage;
 
 	[SerializeField]
 	private AssetReferenceGameObject[] addressObject;
@@ -44,13 +48,11 @@ public class SceneController : MonoBehaviour
 	private void OnDestroy()
 	{
 		addressObject[addressIndex].ReleaseAsset();
-
 	}
 
 	public void Initialization(int num)
 	{
 		addressIndex = num;
-		addressObject[addressIndex].LoadAssetAsync();
 		GameStart = true;
 		StartCoroutine(CoCharaterInit());
 
@@ -58,7 +60,7 @@ public class SceneController : MonoBehaviour
 
 	IEnumerator CoCharaterInit()
 	{
-		yield return new WaitForSeconds(0.2f);  // 수정 나중에  until 같은 코드로 고치기
+		yield return addressObject[addressIndex].LoadAssetAsync(); // 수정 나중에  until 같은 코드로 고치기
 
 		var character = Instantiate(addressObject[addressIndex].Asset) as GameObject;
 		character.GetComponent<GameChater>().OnDeathUIAction = OnDeathUI;
@@ -100,6 +102,25 @@ public class SceneController : MonoBehaviour
 	public void OnDeathUI()
 	{
 		DeathUI.SetActive(true);
+	}
+
+	
+	public void Pause()
+	{
+		if (!BlockImage.activeSelf)
+		{
+			BlockImage.SetActive(true);
+			PauseUI.SetActive(true);
+			Time.timeScale = 0;
+		}
+		else
+		{
+			BlockImage.SetActive(false);
+			PauseUI.SetActive(false);
+			Time.timeScale = 1;
+		}
+
+
 	}
 
 	private void Update()

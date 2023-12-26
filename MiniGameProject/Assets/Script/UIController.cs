@@ -26,4 +26,11 @@ public class UIController : MonoBehaviour
 		stageUI.SetActive(true);
 		sceneController.Initialization(0);
 	}
+
+	public void MainOn()
+	{
+		selectCharacterUI.SetActive(false);
+		stageUI.SetActive(false);
+		mainUI.SetActive(true);
+	}
 }

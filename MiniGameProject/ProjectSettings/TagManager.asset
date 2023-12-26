@@ -49,3 +49,6 @@ TagManager:
   - name: Obstacle
     uniqueID: 3756449653
     locked: 0
+  - name: Land
+    uniqueID: 59556373
+    locked: 0

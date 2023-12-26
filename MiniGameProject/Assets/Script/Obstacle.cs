@@ -19,7 +19,7 @@ public class Obstacle : MonoBehaviour  // 나중에 rect transform 으로 시간되면 바
 
 	public void Move(GameObject item)
 	{
-		transform.localScale = new Vector3(1, UnityEngine.Random.Range(4,7), 1);
+		transform.localScale = new Vector3(0.8f, UnityEngine.Random.Range(1.0f,2.0f), 1);
 	
 		transform.DOMoveX(endPoint, duration).OnComplete(() =>
 		{
