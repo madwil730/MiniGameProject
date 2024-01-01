@@ -21,7 +21,6 @@ public class TestScript : MonoBehaviour
 	}
 
 	private void Move()
-
 	{
 		//float h = Input.GetAxis("Horizontal")
 	}

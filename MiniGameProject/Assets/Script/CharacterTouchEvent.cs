@@ -22,6 +22,4 @@ public class CharacterTouchEvent : MonoBehaviour, IPointerDownHandler
 			//character.GetComponent<Rigidbody2D>().AddForce(transform.up * 5,ForceMode2D.Impulse);
 		}
 	}
-
-	
 }

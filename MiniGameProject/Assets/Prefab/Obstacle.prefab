@@ -252,5 +252,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   endPoint: -4
   duration: 2
-  spawnPosition: {x: 4, y: -4.7, z: 0}
+  spawnPosition: {x: 4, y: -5, z: 0}
   scoreBox: {fileID: 0}

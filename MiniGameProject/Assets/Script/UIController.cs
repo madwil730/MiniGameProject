@@ -20,11 +20,11 @@ public class UIController : MonoBehaviour
 		mainUI.SetActive(false);
 	}
 
-	public void StageOn()
+	public void StageOn(int index)
 	{
 		selectCharacterUI.SetActive(false);
 		stageUI.SetActive(true);
-		sceneController.Initialization(0);
+		sceneController.Initialization(index);
 	}
 
 	public void MainOn()
@@ -32,5 +32,6 @@ public class UIController : MonoBehaviour
 		selectCharacterUI.SetActive(false);
 		stageUI.SetActive(false);
 		mainUI.SetActive(true);
+		sceneController.Clear();
 	}
 }

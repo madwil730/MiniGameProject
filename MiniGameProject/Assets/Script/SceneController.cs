@@ -1,18 +1,13 @@
-using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.EventSystems;
-using UnityEngine.SocialPlatforms.Impl;
-using UnityEngine.UIElements;
+using UnityEngine.TextCore.Text;
 
 public class SceneController : MonoBehaviour
 {
 	[SerializeField]
-	private GameObject[] obstacle;
+	private GameObject[] obstacles;
 	[SerializeField]
 	private GameObject[] ItemList;
 	[SerializeField]
@@ -38,12 +33,13 @@ public class SceneController : MonoBehaviour
 	private int addressIndex;
 	private int obstacleIndex = 0;
 	private bool backGroundChange;
+	private GameObject character;
 	public static bool PlayerDeath;
-	bool GameStart;
+	private IEnumerator coroutine;
 
 	public TextMeshProUGUI Score;
 	[HideInInspector]
-	public  int ScoreIndex = 0;
+	public int ScoreIndex = 0;
 
 	private void OnDestroy()
 	{
@@ -52,8 +48,14 @@ public class SceneController : MonoBehaviour
 
 	public void Initialization(int num)
 	{
+		obstacleIndex = 0;
 		addressIndex = num;
-		GameStart = true;
+
+		foreach (var obstacle in obstacles)
+		{
+			Debug.Log(obstacle.transform.localPosition);
+		}
+
 		StartCoroutine(CoCharaterInit());
 
 	}
@@ -62,49 +64,63 @@ public class SceneController : MonoBehaviour
 	{
 		yield return addressObject[addressIndex].LoadAssetAsync(); // 수정 나중에  until 같은 코드로 고치기
 
-		var character = Instantiate(addressObject[addressIndex].Asset) as GameObject;
+		character = Instantiate(addressObject[addressIndex].Asset) as GameObject;
 		character.GetComponent<GameChater>().OnDeathUIAction = OnDeathUI;
 		characterTouchEvent.Initialization(character);
-		StartCoroutine(CoOnObstacle());
+		coroutine = CoOnObstacle();
+		StartCoroutine(coroutine);
+	}
+
+	IEnumerator test()
+	{
+		while(true)
+		{
+			yield return null;
+			Debug.Log(2323);
+		}
 	}
 
 	IEnumerator CoOnObstacle()
 	{
+
 		while (true)
 		{
 			yield return new WaitForSeconds(obstacleTime);
 
-
-			if (obstacleIndex == obstacle.Length)
+			if (obstacleIndex == obstacles.Length)
 				obstacleIndex = 0;
 
-			var randomItem = Random.Range(0, 3);
-			//var randomItem = 1;
+			var randomItem = Random.Range(0, 5);
+			randomItem = 2;
+
+			Debug.Log(randomItem);
+
+			obstacles[obstacleIndex].GetComponent<Obstacle>().Move();
+
 
 			if (randomItem == 1)
 			{
-				ItemList[0].transform.parent = obstacle[obstacleIndex].transform;
-				ItemList[0].transform.localPosition = new Vector3(-1.8f, 0.8f, 0);
 				ItemList[0].GetComponent<ItemController>().ItemAction = () => IncreaseScore(5);
+				ItemList[0].GetComponent<ItemController>().Move(new Vector3(3.2f, UnityEngine.Random.Range(-1.0f, 1.0f), 0));
+			}
+			else if (randomItem == 2)
+			{
+				ItemList[1].GetComponent<ItemController>().ItemAction = () => character.GetComponent<GameChater>().SuperArmor();
+				ItemList[1].GetComponent<ItemController>().Move(new Vector3(3.2f, UnityEngine.Random.Range(-1.0f, 1.0f), 0));
 			}
 
-			obstacle[obstacleIndex].GetComponent<Obstacle>().Move(ItemList[0]);
 			obstacleIndex++;
+
 		}
 	}
 
-	public void IncreaseScore( int num)
+	public void IncreaseScore(int num)
 	{
 		ScoreIndex += num;
 		Score.text = $"Score  : {ScoreIndex} ";
 	}
 
-	public void OnDeathUI()
-	{
-		DeathUI.SetActive(true);
-	}
 
-	
 	public void Pause()
 	{
 		if (!BlockImage.activeSelf)
@@ -119,15 +135,53 @@ public class SceneController : MonoBehaviour
 			PauseUI.SetActive(false);
 			Time.timeScale = 1;
 		}
+	}
 
+	public void OnDeathUI()
+	{
+		DeathUI.SetActive(true);
+		BlockImage.SetActive(true);
+	}
 
+	public void ReStart()
+	{
+		Clear();
+		DeathUI.SetActive(false);
+		StartCoroutine(CoCharaterInit());
+	}
+
+	public void Clear()
+	{
+		StopCoroutine(coroutine);
+		coroutine = null;
+		ScoreIndex = 0;
+		Score.text = $"Score  :  0 ";
+		addressObject[addressIndex].ReleaseAsset();
+		Destroy(character);
+		Pause();
+
+		foreach (var obstacle in obstacles)
+		{
+			obstacle.GetComponent<Obstacle>().OnStartPosition();
+		}
+
+		foreach (var item in ItemList)
+		{
+			item.GetComponent<ItemController>().OnStartPosition();
+		}
 	}
 
 	private void Update()
 	{
+		//if(Input.GetKeyDown(KeyCode.A))
+		//{
+		//	Debug.Log(corutine == null);
+		//	StopCoroutine(corutine);
+		//	Debug.Log(corutine == null);
+		//	corutine = null;
+		//	Debug.Log(corutine == null);
+		//}
 
-		if (GameStart)
-		{
 			if (backGround_1.transform.localPosition.x > -7 && !backGroundChange)
 			{
 
@@ -144,7 +198,6 @@ public class SceneController : MonoBehaviour
 			}
 			else if (backGround_2.transform.localPosition.x <= -7)
 				backGroundChange = false;
-		}
 	}
 
 

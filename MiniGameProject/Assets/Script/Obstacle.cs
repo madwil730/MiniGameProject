@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using System;
 
 public class Obstacle : MonoBehaviour  // 나중에 rect transform 으로 시간되면 바꾸기 
 {
@@ -13,20 +10,27 @@ public class Obstacle : MonoBehaviour  // 나중에 rect transform 으로 시간되면 바
 	private float duration;
 	[SerializeField]
 	private Vector3 spawnPosition;
-	[SerializeField]
-	private GameObject scoreBox;
+	
 
+	private Sequence tweenSequence;
 
-	public void Move(GameObject item)
+	public void Move()
 	{
 		transform.localScale = new Vector3(0.8f, UnityEngine.Random.Range(1.0f,2.0f), 1);
-	
-		transform.DOMoveX(endPoint, duration).OnComplete(() =>
+
+		tweenSequence = DOTween.Sequence();
+		tweenSequence.Append(transform.DOMoveX(endPoint, duration).OnComplete(() =>
 		{
 			transform.localPosition = spawnPosition;
 
-			if (item != null)
-				item.transform.localPosition = new Vector3(100, 100, 0);
-		});
+		}));
+
+
+	}
+
+	public void OnStartPosition()
+	{
+		tweenSequence.Kill();	
+		transform.localPosition = spawnPosition;	
 	}
 }
