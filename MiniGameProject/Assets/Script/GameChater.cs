@@ -6,13 +6,16 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
 using UnityEngine.TextCore.Text;
 
-public class GameChater : MonoBehaviour, ChaterBase
+public class GameChater : MonoBehaviour
 {
 
 	public Action OnDeathUIAction;
+	public Action OnSpecialAction;
 	private bool IsSuperArmor;
+	protected bool OnSpeical;
 
-	public void Special()
+
+	public virtual void Special(Action action = null)
 	{
 		Debug.Log("this is Special");
 	}

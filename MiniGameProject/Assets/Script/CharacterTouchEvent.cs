@@ -17,8 +17,9 @@ public class CharacterTouchEvent : MonoBehaviour, IPointerDownHandler
 	{
 		if (!SceneController.PlayerDeath)
 		{
-			character.transform.DOMoveY(character.transform.position.y + 3, 1);
-			character.GetComponent<Rigidbody2D>().gravityScale = 0;
+			character.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+			character.GetComponent<Rigidbody2D>().AddForce(Vector3.up * 5, ForceMode2D.Impulse);
+			//character.GetComponent<Rigidbody2D>().gravityScale = 0;
 			//character.GetComponent<Rigidbody2D>().AddForce(transform.up * 5,ForceMode2D.Impulse);
 		}
 	}

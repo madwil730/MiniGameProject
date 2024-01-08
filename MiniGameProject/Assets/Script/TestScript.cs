@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class TestScript : MonoBehaviour
 {
-	private Rigidbody rigid;
+	private Rigidbody2D rigid;
 
-	public int jumpPower;
-	public float MoveSpeed;
 
 	private void Start()
 	{
 		
-		rigid = GetComponent<Rigidbody>();
+		rigid = GetComponent<Rigidbody2D>();
 	}
 
 	private void Update()
@@ -29,7 +27,8 @@ public class TestScript : MonoBehaviour
 	{
 		if(Input.GetKeyDown(KeyCode.Space))
 		{
-			rigid.AddForce(Vector3.up * 5, ForceMode.Impulse);
+			rigid.velocity = Vector2.zero;
+			rigid.AddForce(Vector3.up * 5, ForceMode2D.Impulse);
 		}
 	}
 

@@ -1,8 +1,10 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AddressableAssets;
 using UnityEngine.TextCore.Text;
+using Unity.VisualScripting.Dependencies.NCalc;
 
 public class SceneController : MonoBehaviour
 {
@@ -15,9 +17,9 @@ public class SceneController : MonoBehaviour
 	[SerializeField]
 	private GameObject PauseUI;
 	[SerializeField]
-	private Transform Land;
-	[SerializeField]
 	private GameObject BlockImage;
+	[SerializeField]
+	private Button specialButton;
 
 	[SerializeField]
 	private AssetReferenceGameObject[] addressObject;
@@ -29,6 +31,7 @@ public class SceneController : MonoBehaviour
 	private GameObject backGround_2;
 	[SerializeField]
 	private float obstacleTime = 3;
+
 
 	private int addressIndex;
 	private int obstacleIndex = 0;
@@ -48,17 +51,36 @@ public class SceneController : MonoBehaviour
 
 	public void Initialization(int num)
 	{
+		specialButton.interactable = true;
 		obstacleIndex = 0;
 		addressIndex = num;
 
-		foreach (var obstacle in obstacles)
+		StartCoroutine(CoCharaterInit());
+	}
+
+
+	public void Speical()
+	{
+		var speical = character.GetComponent<GameChater>();
+
+		if(speical is Duck)
+			speical.Special();
+		else if (speical is Eagle)
 		{
-			Debug.Log(obstacle.transform.localPosition);
+			speical.Special(() =>
+			{
+				foreach (var obstacle in obstacles)
+				{
+					obstacle.GetComponent<Obstacle>().OnStartPosition();
+				}
+			});
 		}
 
-		StartCoroutine(CoCharaterInit());
+		specialButton.interactable = false;
+
 
 	}
+
 
 	IEnumerator CoCharaterInit()
 	{
@@ -71,14 +93,7 @@ public class SceneController : MonoBehaviour
 		StartCoroutine(coroutine);
 	}
 
-	IEnumerator test()
-	{
-		while(true)
-		{
-			yield return null;
-			Debug.Log(2323);
-		}
-	}
+
 
 	IEnumerator CoOnObstacle()
 	{
@@ -90,10 +105,8 @@ public class SceneController : MonoBehaviour
 			if (obstacleIndex == obstacles.Length)
 				obstacleIndex = 0;
 
-			var randomItem = Random.Range(0, 5);
-			randomItem = 2;
+			var randomItem = Random.Range(0, 9);
 
-			Debug.Log(randomItem);
 
 			obstacles[obstacleIndex].GetComponent<Obstacle>().Move();
 
