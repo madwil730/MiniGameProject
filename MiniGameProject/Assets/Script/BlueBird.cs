@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Duck : GameChater
+public class BlueBird : GameChater
 {
 	public override void Special(Action action = null)
 	{
@@ -14,8 +14,8 @@ public class Duck : GameChater
 	IEnumerator CoSpeical()
 	{
 		OnSpeical = true;
-		transform.localScale = new Vector3(0.1f,0.1f,1);
+		transform.localScale = Vector3.one;
 		yield return new WaitForSeconds(5);
-		transform.localScale = new Vector3(0.3f, 0.3f, 1);
+		transform.localScale = new Vector3(1.5f, 1.5f, 1);
 	}
 }

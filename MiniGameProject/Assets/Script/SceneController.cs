@@ -1,10 +1,8 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.AddressableAssets;
-using UnityEngine.TextCore.Text;
-using Unity.VisualScripting.Dependencies.NCalc;
+using UnityEngine.UI;
 
 public class SceneController : MonoBehaviour
 {
@@ -38,7 +36,7 @@ public class SceneController : MonoBehaviour
 	private bool backGroundChange;
 	private GameObject character;
 	public static bool PlayerDeath;
-	private IEnumerator coroutine;
+	private IEnumerator obstacleCoroutine;
 
 	public TextMeshProUGUI Score;
 	[HideInInspector]
@@ -58,39 +56,16 @@ public class SceneController : MonoBehaviour
 		StartCoroutine(CoCharaterInit());
 	}
 
-
-	public void Speical()
-	{
-		var speical = character.GetComponent<GameChater>();
-
-		if(speical is Duck)
-			speical.Special();
-		else if (speical is Eagle)
-		{
-			speical.Special(() =>
-			{
-				foreach (var obstacle in obstacles)
-				{
-					obstacle.GetComponent<Obstacle>().OnStartPosition();
-				}
-			});
-		}
-
-		specialButton.interactable = false;
-
-
-	}
-
-
 	IEnumerator CoCharaterInit()
 	{
-		yield return addressObject[addressIndex].LoadAssetAsync(); // 수정 나중에  until 같은 코드로 고치기
+		yield return addressObject[addressIndex].LoadAssetAsync(); 
 
 		character = Instantiate(addressObject[addressIndex].Asset) as GameObject;
+		character.transform.localPosition = new Vector3(-1, 0, 0);
 		character.GetComponent<GameChater>().OnDeathUIAction = OnDeathUI;
 		characterTouchEvent.Initialization(character);
-		coroutine = CoOnObstacle();
-		StartCoroutine(coroutine);
+		obstacleCoroutine = CoOnObstacle();
+		StartCoroutine(obstacleCoroutine);
 	}
 
 
@@ -100,26 +75,32 @@ public class SceneController : MonoBehaviour
 
 		while (true)
 		{
+			if (ScoreIndex > 10)
+				obstacleTime = 2;
+
+			if (ScoreIndex > 25)
+				obstacleTime = Random.Range(1.0f,2.0f);
+
 			yield return new WaitForSeconds(obstacleTime);
 
 			if (obstacleIndex == obstacles.Length)
 				obstacleIndex = 0;
 
-			var randomItem = Random.Range(0, 9);
+			var randomItem = Random.Range(0, 7);
+			randomItem = 1;
 
-
-			obstacles[obstacleIndex].GetComponent<Obstacle>().Move();
+			obstacles[obstacleIndex].GetComponentInChildren<Obstacle>().Move();
 
 
 			if (randomItem == 1)
 			{
-				ItemList[0].GetComponent<ItemController>().ItemAction = () => IncreaseScore(5);
-				ItemList[0].GetComponent<ItemController>().Move(new Vector3(3.2f, UnityEngine.Random.Range(-1.0f, 1.0f), 0));
+				ItemList[0].GetComponent<ItemController>().ItemAction = () => IncreaseScore(2);
+				ItemList[0].GetComponent<ItemController>().Move(new Vector3(3.2f, UnityEngine.Random.Range(-4.7f, 1.3f), 0));
 			}
 			else if (randomItem == 2)
 			{
 				ItemList[1].GetComponent<ItemController>().ItemAction = () => character.GetComponent<GameChater>().SuperArmor();
-				ItemList[1].GetComponent<ItemController>().Move(new Vector3(3.2f, UnityEngine.Random.Range(-1.0f, 1.0f), 0));
+				ItemList[1].GetComponent<ItemController>().Move(new Vector3(3.2f, UnityEngine.Random.Range(-4.7f, 1.3f), 0));
 			}
 
 			obstacleIndex++;
@@ -154,6 +135,7 @@ public class SceneController : MonoBehaviour
 	{
 		DeathUI.SetActive(true);
 		BlockImage.SetActive(true);
+		specialButton.interactable = true;
 	}
 
 	public void ReStart()
@@ -165,8 +147,8 @@ public class SceneController : MonoBehaviour
 
 	public void Clear()
 	{
-		StopCoroutine(coroutine);
-		coroutine = null;
+		StopCoroutine(obstacleCoroutine);
+		obstacleCoroutine = null;
 		ScoreIndex = 0;
 		Score.text = $"Score  :  0 ";
 		addressObject[addressIndex].ReleaseAsset();
@@ -186,31 +168,46 @@ public class SceneController : MonoBehaviour
 
 	private void Update()
 	{
-		//if(Input.GetKeyDown(KeyCode.A))
-		//{
-		//	Debug.Log(corutine == null);
-		//	StopCoroutine(corutine);
-		//	Debug.Log(corutine == null);
-		//	corutine = null;
-		//	Debug.Log(corutine == null);
-		//}
 
-			if (backGround_1.transform.localPosition.x > -7 && !backGroundChange)
+
+		if (backGround_1.transform.localPosition.x > -5.6f && !backGroundChange)
+		{
+
+			backGround_1.transform.Translate(Vector3.left * Time.deltaTime);
+			backGround_2.transform.localPosition = new Vector3(backGround_1.transform.localPosition.x + 5.85f, -2, 0);
+		}
+		else if (backGround_1.transform.localPosition.x <= -5.6f)
+			backGroundChange = true;
+
+		if (backGround_2.transform.localPosition.x > -5.6f && backGroundChange)
+		{
+			backGround_2.transform.Translate(Vector3.left * Time.deltaTime);
+			backGround_1.transform.localPosition = new Vector3(backGround_2.transform.localPosition.x + 5.85f, -2, 0);
+		}
+		else if (backGround_2.transform.localPosition.x <= -5.6f)
+			backGroundChange = false;
+	}
+
+
+	public void Speical()
+	{
+		var speical = character.GetComponent<GameChater>();
+
+		if (speical is BlueBird)
+			speical.Special();
+		else if (speical is RedBird)
+		{
+			speical.Special(() =>
 			{
+				foreach (var obstacle in obstacles)
+				{
+					obstacle.GetComponent<Obstacle>().OnStartPosition();
+				}
+			});
+		}
 
-				backGround_1.transform.Translate(Vector3.left * Time.deltaTime);
-				backGround_2.transform.localPosition = new Vector3(backGround_1.transform.localPosition.x + 7.67f, -2, 0);
-			}
-			else if (backGround_1.transform.localPosition.x <= -7)
-				backGroundChange = true;
+		specialButton.interactable = false;
 
-			if (backGround_2.transform.localPosition.x > -7 && backGroundChange)
-			{
-				backGround_2.transform.Translate(Vector3.left * Time.deltaTime);
-				backGround_1.transform.localPosition = new Vector3(backGround_2.transform.localPosition.x + 7.67f, -2, 0);
-			}
-			else if (backGround_2.transform.localPosition.x <= -7)
-				backGroundChange = false;
 	}
 
 
